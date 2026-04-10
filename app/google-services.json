@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "538535239714",
+    "project_id": "publiceye-bb27b",
+    "storage_bucket": "publiceye-bb27b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:538535239714:android:5383d7097a91f09ac36a7b",
+        "android_client_info": {
+          "package_name": "com.publiceye.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKNyXw0Fx_EUnHq8FQbgEEifqgp_EjExA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
