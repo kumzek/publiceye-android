@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base app theme — Material3 Light, no action bar (Compose handles its own top bars) -->
+    <style name="Theme.PublicEye" parent="Theme.Material3.Light.NoActionBar" />
+</resources>
