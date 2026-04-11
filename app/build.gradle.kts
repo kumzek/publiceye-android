@@ -22,7 +22,7 @@ android {
 
         // TODO: Replace with your actual Web Client ID from Firebase Console
         // Found at: Firebase Console → Authentication → Sign-in method → Google → Web Client ID
-        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"YOUR_WEB_CLIENT_ID_HERE\"")
+        buildConfigField("String", "GOOGLE_WEB_CLIENT_ID", "\"966173877374-qojma3vh3rbumvgq9vbf1cn6feevd4cj.apps.googleusercontent.com\"")
     }
 
     buildTypes {

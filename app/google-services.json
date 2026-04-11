@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "538535239714",
-    "project_id": "publiceye-bb27b",
-    "storage_bucket": "publiceye-bb27b.firebasestorage.app"
+    "project_number": "966173877374",
+    "project_id": "publiceye-c6b36",
+    "storage_bucket": "publiceye-c6b36.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:538535239714:android:5383d7097a91f09ac36a7b",
+        "mobilesdk_app_id": "1:966173877374:android:55346b260ef8b441a5242f",
         "android_client_info": {
           "package_name": "com.publiceye.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "966173877374-1ei8ho0rbi5e0q4otjofs38tr6cn1njk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.publiceye.app",
+            "certificate_hash": "455c2888a42ff70b096162f2262e401dea908987"
+          }
+        },
+        {
+          "client_id": "966173877374-qojma3vh3rbumvgq9vbf1cn6feevd4cj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCKNyXw0Fx_EUnHq8FQbgEEifqgp_EjExA"
+          "current_key": "AIzaSyAwq_jgxKzJFfbukUxvR1vL5VFQJTuX1e8"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "966173877374-qojma3vh3rbumvgq9vbf1cn6feevd4cj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
