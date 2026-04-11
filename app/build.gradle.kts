@@ -100,6 +100,9 @@ dependencies {
     implementation(libs.credentials.play.services)
     implementation(libs.googleid)
 
+    // Material Components (XML theme for Activity — Theme.Material3.Light.NoActionBar)
+    implementation(libs.material)
+
     // Image loading
     implementation(libs.coil.compose)
 
