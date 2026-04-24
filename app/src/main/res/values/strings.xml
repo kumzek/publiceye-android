@@ -27,6 +27,48 @@
     <!-- Home placeholder -->
     <string name="home_coming_soon">Map &amp; Feed coming in Phase 2</string>
 
+    <!-- Report flow -->
+    <string name="report_issue">Report an issue</string>
+    <string name="report_step_of">Step %1$d of %2$d</string>
+    <string name="report_photo_title">Add a photo</string>
+    <string name="report_photo_subtitle">Help others see what you see. One photo is required.</string>
+    <string name="report_take_photo">Take photo</string>
+    <string name="report_choose_from_gallery">Choose from gallery</string>
+    <string name="report_retake_photo">Retake</string>
+    <string name="report_details_title">Describe the issue</string>
+    <string name="report_location_fetching">Getting your location…</string>
+    <string name="report_location_label">Location</string>
+    <string name="report_location_refresh">Refresh</string>
+    <string name="report_title_label">Title</string>
+    <string name="report_title_hint">e.g. Deep pothole on Main Road</string>
+    <string name="report_description_label">Description</string>
+    <string name="report_description_hint">Add any useful details — size, severity, landmarks nearby…</string>
+    <string name="report_category_label">Category</string>
+    <string name="report_category_roads">Potholes &amp; Roads</string>
+    <string name="report_review_title">Review &amp; submit</string>
+    <string name="report_submit">Submit report</string>
+    <string name="report_submitting">Submitting…</string>
+    <string name="report_next">Next</string>
+    <string name="report_back">Back</string>
+    <string name="report_cancel">Cancel</string>
+    <string name="report_discard_confirm">Discard this report? Your photo and details won\'t be saved.</string>
+    <string name="report_discard">Discard</string>
+    <string name="report_keep_editing">Keep editing</string>
+    <string name="report_success_title">Report submitted!</string>
+    <string name="report_success_subtitle">Thanks for helping improve your community. You\'ll see your pin on the map shortly.</string>
+    <string name="report_success_done">Done</string>
+    <string name="report_enable_notifs_title">Stay updated on this report</string>
+    <string name="report_enable_notifs_body">Get notified when your report gets upvoted or its status changes.</string>
+    <string name="report_enable_notifs_cta">Turn on notifications</string>
+    <string name="report_rate_limited">You\'ve submitted 10 reports today. Check back tomorrow!</string>
+    <string name="report_error_no_photo">Please add a photo first.</string>
+    <string name="report_error_no_title">Please enter a short title.</string>
+    <string name="report_error_no_location">We couldn\'t get your location. Turn on location and try again.</string>
+    <string name="report_error_upload">Upload failed. Please check your connection and try again.</string>
+    <string name="report_location_perm_needed">Location permission needed to tag your report.</string>
+    <string name="report_camera_perm_needed">Camera permission needed to take a photo.</string>
+    <string name="home_fab_report">Report</string>
+
     <!-- Errors -->
     <string name="error_generic">Something went wrong. Please try again.</string>
     <string name="error_network">No internet connection. Please check your network.</string>

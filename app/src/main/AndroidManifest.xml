@@ -34,6 +34,22 @@
             </intent-filter>
         </activity>
 
+        <!-- Google Maps API Key (injected from local.properties via Secrets Gradle Plugin) -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <!-- FileProvider (for camera capture into app cache) -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
+
         <!-- Firebase Cloud Messaging -->
         <service
             android:name=".service.PublicEyeMessagingService"

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Paths exposed to FileProvider so the system camera app can write photos
+  into our private cache dir. `camera_photos/` lives under context.cacheDir.
+-->
+<paths>
+    <cache-path
+        name="camera_photos"
+        path="camera_photos/" />
+</paths>

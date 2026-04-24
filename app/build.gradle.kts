@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.secrets.gradle)
 }
 
 android {
@@ -108,4 +109,20 @@ dependencies {
 
     // DataStore (notification permission state)
     implementation(libs.datastore.preferences)
+
+    // Location (current location capture for issue reports)
+    implementation(libs.play.services.location)
+
+    // EXIF (strip sensitive metadata from uploaded photos)
+    implementation(libs.exifinterface)
+
+    // Google Maps
+    implementation(libs.play.services.maps)
+    implementation(libs.maps.compose)
+}
+
+secrets {
+    // local.properties is gitignored — safe to store the real key there
+    propertiesFileName = "local.properties"
+    defaultPropertiesFileName = "secrets.defaults.properties"
 }

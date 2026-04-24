@@ -11,9 +11,12 @@ sealed class Screen(val route: String) {
     data object SignUp                  : Screen("signup")
     data object NotificationRationale   : Screen("notification_rationale")
 
-    // ── Phase 2: Core (placeholders until wireframes are approved) ──────────
+    // ── Phase 2: Core ───────────────────────────────────────────────────────
     data object Home                    : Screen("home")          // Map + Feed tabs
-    data object ReportIssue             : Screen("report_issue")  // Report submission
+    data object ReportIssue             : Screen("report_issue")  // 3-step report flow
+    data object ReportSuccess           : Screen("report_success/{issueId}") {
+        fun createRoute(issueId: String) = "report_success/$issueId"
+    }
     data object IssueDetail             : Screen("issue_detail/{issueId}") {
         fun createRoute(issueId: String) = "issue_detail/$issueId"
     }

@@ -1,0 +1,15 @@
+# Local secrets — never commit
+local.properties
+
+# Android build outputs
+/build
+/app/build
+*.apk
+*.aab
+*.keystore
+*.jks
+
+# IDE
+.idea/
+*.iml
+.DS_Store
