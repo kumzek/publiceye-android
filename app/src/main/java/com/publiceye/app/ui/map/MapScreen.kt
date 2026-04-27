@@ -5,14 +5,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,9 +21,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -49,9 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -70,6 +63,9 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 import com.publiceye.app.R
 import com.publiceye.app.data.model.Issue
+import com.publiceye.app.ui.components.BottomNavTab
+import com.publiceye.app.ui.components.PublicEyeBottomNav
+import com.publiceye.app.ui.components.StatusBadge
 import com.publiceye.app.ui.theme.Amber40
 import com.publiceye.app.ui.theme.Blue40
 
@@ -79,7 +75,9 @@ private val Bengaluru = LatLng(12.9716, 77.5946)
 
 @Composable
 fun MapScreen(
-    onNavigateToReport: () -> Unit,
+    onNavigateToReport  : () -> Unit,
+    onNavigateToFeed    : () -> Unit,
+    onNavigateToProfile : () -> Unit,
     viewModel: MapViewModel = hiltViewModel(),
 ) {
     val filteredIssues by viewModel.filteredIssues.collectAsStateWithLifecycle()
@@ -121,7 +119,7 @@ fun MapScreen(
                         title = issue.title,
                         onClick = {
                             viewModel.selectIssue(issue)
-                            true // consume event so the default info window doesn't show
+                            true
                         },
                     )
                 }
@@ -168,7 +166,17 @@ fun MapScreen(
         }
 
         // ── Bottom navigation bar ─────────────────────────────────────────────
-        MapBottomNav(modifier = Modifier.align(Alignment.BottomCenter))
+        PublicEyeBottomNav(
+            activeTab     = BottomNavTab.MAP,
+            onTabSelected = { tab ->
+                when (tab) {
+                    BottomNavTab.MAP     -> { /* already here */ }
+                    BottomNavTab.FEED    -> onNavigateToFeed()
+                    BottomNavTab.PROFILE -> onNavigateToProfile()
+                }
+            },
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
 
         // ── Selected issue preview card ───────────────────────────────────────
         AnimatedVisibility(
@@ -271,7 +279,6 @@ private fun MapFilterBar(
             verticalAlignment     = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            // Status filter chip
             Box {
                 FilterChip(
                     selected = statusFilter != null,
@@ -314,7 +321,6 @@ private fun MapFilterBar(
                 }
             }
 
-            // Category chip — hardcoded to Roads for MVP (V1.1 adds multi-category)
             FilterChip(
                 selected = true,
                 onClick  = {},
@@ -365,7 +371,6 @@ private fun IssuePreviewCard(
 
             Spacer(Modifier.height(6.dp))
 
-            // Title
             Text(
                 text       = issue.title,
                 style      = MaterialTheme.typography.bodyMedium,
@@ -373,7 +378,6 @@ private fun IssuePreviewCard(
                 maxLines   = 2,
             )
 
-            // Address
             if (issue.address.isNotBlank()) {
                 Spacer(Modifier.height(2.dp))
                 Text(
@@ -386,7 +390,6 @@ private fun IssuePreviewCard(
 
             Spacer(Modifier.height(12.dp))
 
-            // Upvotes + Report button row
             Row(
                 modifier          = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -418,90 +421,6 @@ private fun IssuePreviewCard(
                     )
                     Spacer(Modifier.width(5.dp))
                     Text("Report Issue", fontSize = 12.sp)
-                }
-            }
-        }
-    }
-}
-
-// ── Status badge ──────────────────────────────────────────────────────────────
-
-@Composable
-private fun StatusBadge(status: String) {
-    val (bg, labelColor) = when (status) {
-        Issue.STATUS_OPEN        -> Color(0xFFFFF3E0) to Color(0xFFE65100)
-        Issue.STATUS_IN_PROGRESS -> Color(0xFFE3F2FD) to Color(0xFF0D47A1)
-        Issue.STATUS_RESOLVED    -> Color(0xFFE8F5E9) to Color(0xFF1B5E20)
-        else                     -> Color(0xFFF5F5F5) to Color(0xFF424242)
-    }
-    val label = when (status) {
-        Issue.STATUS_OPEN        -> "Open"
-        Issue.STATUS_IN_PROGRESS -> "In Progress"
-        Issue.STATUS_RESOLVED    -> "Resolved"
-        else                     -> status
-    }
-    Box(
-        modifier = Modifier
-            .clip(RoundedCornerShape(4.dp))
-            .background(bg)
-            .padding(horizontal = 8.dp, vertical = 3.dp),
-    ) {
-        Text(
-            text          = label.uppercase(),
-            fontSize      = 10.sp,
-            fontWeight    = FontWeight.Bold,
-            color         = labelColor,
-            letterSpacing = 0.5.sp,
-        )
-    }
-}
-
-// ── Bottom navigation bar ─────────────────────────────────────────────────────
-
-private data class NavItem(val icon: ImageVector, val label: String, val active: Boolean)
-
-@Composable
-private fun MapBottomNav(modifier: Modifier = Modifier) {
-    val items = listOf(
-        NavItem(Icons.Default.Map,    "Map",     active = true),
-        NavItem(Icons.Default.List,   "Feed",    active = false),
-        NavItem(Icons.Default.Person, "Profile", active = false),
-    )
-    Surface(
-        modifier        = modifier.fillMaxWidth(),
-        color           = MaterialTheme.colorScheme.surface,
-        shadowElevation = 8.dp,
-    ) {
-        Row(modifier = Modifier.fillMaxWidth().height(56.dp)) {
-            items.forEach { item ->
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Icon(
-                        imageVector        = item.icon,
-                        contentDescription = item.label,
-                        tint               = if (item.active) Blue40 else MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier           = Modifier.size(22.dp),
-                    )
-                    Text(
-                        text       = item.label,
-                        style      = MaterialTheme.typography.labelSmall,
-                        color      = if (item.active) Blue40 else MaterialTheme.colorScheme.onSurfaceVariant,
-                        fontWeight = if (item.active) FontWeight.Bold else FontWeight.Normal,
-                    )
-                    if (item.active) {
-                        Spacer(Modifier.height(2.dp))
-                        Box(
-                            Modifier
-                                .width(20.dp)
-                                .height(2.dp)
-                                .background(Blue40, RoundedCornerShape(1.dp))
-                        )
-                    }
                 }
             }
         }

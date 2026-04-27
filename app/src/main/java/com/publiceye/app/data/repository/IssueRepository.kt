@@ -19,6 +19,19 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
+ * Outcome of a toggleUpvote call.
+ *
+ *  - [Success] — Firestore updated. `hasUpvoted` reflects the NEW state (true = just upvoted).
+ *  - [NotLoggedIn] — app is login-gated but included for safety.
+ *  - [Failed] — Firestore error.
+ */
+sealed class UpvoteResult {
+    data class  Success    (val hasUpvoted: Boolean) : UpvoteResult()
+    data object NotLoggedIn                          : UpvoteResult()
+    data class  Failed     (val message: String)     : UpvoteResult()
+}
+
+/**
  * Outcome of a submitReport call.
  *
  *  - [Success] — Firestore doc written. `issueId` is the new doc's ID.
@@ -39,6 +52,66 @@ class IssueRepository @Inject constructor(
     private val firestore  : FirebaseFirestore,
     private val storage    : FirebaseStorage,
 ) {
+
+    /**
+     * Real-time stream of a single issue document.
+     * Used by IssueDetailScreen to reflect live upvote counts and status changes.
+     * Emits null if the document is deleted while the screen is open.
+     */
+    fun getIssueFlow(issueId: String): Flow<Issue?> = callbackFlow {
+        val listener = firestore.collection(COLLECTION_ISSUES)
+            .document(issueId)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                trySend(snapshot?.toObject(Issue::class.java))
+            }
+        awaitClose { listener.remove() }
+    }
+
+    /**
+     * Toggle the current user's upvote on an issue.
+     *
+     * Uses a Firestore transaction to atomically:
+     *   - Add uid to `upvotedBy` + increment `upvotes` if not yet upvoted.
+     *   - Remove uid from `upvotedBy` + decrement `upvotes` if already upvoted.
+     *
+     * Returns [UpvoteResult.Success] with `hasUpvoted` = the NEW state.
+     */
+    suspend fun toggleUpvote(issueId: String): UpvoteResult {
+        val uid = auth.currentUser?.uid ?: return UpvoteResult.NotLoggedIn
+
+        return try {
+            val ref = firestore.collection(COLLECTION_ISSUES).document(issueId)
+            var nowUpvoted = false
+
+            firestore.runTransaction { tx ->
+                val snapshot   = tx.get(ref)
+                val upvotedBy  = snapshot.get("upvotedBy") as? List<*> ?: emptyList<String>()
+                val alreadyUp  = upvotedBy.contains(uid)
+
+                if (alreadyUp) {
+                    tx.update(ref, mapOf(
+                        "upvotedBy" to FieldValue.arrayRemove(uid),
+                        "upvotes"   to FieldValue.increment(-1),
+                    ))
+                    nowUpvoted = false
+                } else {
+                    tx.update(ref, mapOf(
+                        "upvotedBy" to FieldValue.arrayUnion(uid),
+                        "upvotes"   to FieldValue.increment(1),
+                    ))
+                    nowUpvoted = true
+                }
+            }.await()
+
+            UpvoteResult.Success(nowUpvoted)
+        } catch (e: Exception) {
+            UpvoteResult.Failed(e.message ?: "Upvote failed.")
+        }
+    }
 
     /**
      * Real-time stream of all issues, ordered newest first.

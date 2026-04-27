@@ -12,7 +12,9 @@ sealed class Screen(val route: String) {
     data object NotificationRationale   : Screen("notification_rationale")
 
     // ── Phase 2: Core ───────────────────────────────────────────────────────
-    data object Home                    : Screen("home")          // Map + Feed tabs
+    data object Home                    : Screen("home")          // Map screen
+    data object Feed                    : Screen("feed")          // Feed list screen
+    data object Profile                 : Screen("profile")       // Profile (Phase 3+, stub)
     data object ReportIssue             : Screen("report_issue")  // 3-step report flow
     data object ReportSuccess           : Screen("report_success/{issueId}") {
         fun createRoute(issueId: String) = "report_success/$issueId"
@@ -20,5 +22,4 @@ sealed class Screen(val route: String) {
     data object IssueDetail             : Screen("issue_detail/{issueId}") {
         fun createRoute(issueId: String) = "issue_detail/$issueId"
     }
-    data object Profile                 : Screen("profile")
 }
