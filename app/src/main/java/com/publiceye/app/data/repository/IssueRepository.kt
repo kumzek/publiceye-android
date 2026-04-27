@@ -9,6 +9,9 @@ import com.google.firebase.firestore.GeoPoint
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.publiceye.app.data.model.Issue
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import java.util.Date
 import java.util.UUID
@@ -36,6 +39,28 @@ class IssueRepository @Inject constructor(
     private val firestore  : FirebaseFirestore,
     private val storage    : FirebaseStorage,
 ) {
+
+    /**
+     * Real-time stream of all issues, ordered newest first.
+     * Capped at 500 documents — enough for MVP scale. Upgrade to geo-query in V1.1.
+     * The Flow stays active as long as the collector is alive (ViewModel scope).
+     */
+    fun getIssuesFlow(): Flow<List<Issue>> = callbackFlow {
+        val listener = firestore.collection(COLLECTION_ISSUES)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .limit(500)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
+                }
+                val issues = snapshot?.documents?.mapNotNull { doc ->
+                    doc.toObject(Issue::class.java)
+                } ?: emptyList()
+                trySend(issues)
+            }
+        awaitClose { listener.remove() }
+    }
 
     /**
      * Submit a new issue report. Runs three steps:

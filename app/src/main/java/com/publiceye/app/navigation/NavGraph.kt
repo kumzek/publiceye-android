@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import com.publiceye.app.ui.auth.AuthViewModel
 import com.publiceye.app.ui.auth.LoginScreen
 import com.publiceye.app.ui.auth.SignUpScreen
-import com.publiceye.app.ui.home.HomePlaceholderScreen
+import com.publiceye.app.ui.map.MapScreen
 import com.publiceye.app.ui.onboarding.NotificationRationaleScreen
 import com.publiceye.app.ui.report.ReportFlowScreen
 import com.publiceye.app.ui.report.ReportSuccessScreen
@@ -76,17 +76,10 @@ fun PublicEyeNavGraph(
             )
         }
 
-        // ── Home (Phase 2 placeholder, but now with Report FAB) ──────────────
+        // ── Home — Map screen (Phase 2a) ──────────────────────────────────────
         composable(Screen.Home.route) {
-            val viewModel: AuthViewModel = hiltViewModel()
-            HomePlaceholderScreen(
-                onSignOut = {
-                    viewModel.signOut()
-                    navController.navigate(Screen.Login.route) {
-                        popUpTo(0) { inclusive = true }
-                    }
-                },
-                onReport = {
+            MapScreen(
+                onNavigateToReport = {
                     navController.navigate(Screen.ReportIssue.route)
                 },
             )
